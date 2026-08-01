@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - LMS Blog</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome same/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-100 flex h-screen overflow-hidden">
+    <div class="w-72 bg-slate-900 text-white p-8 flex flex-col">
+        <div class="text-2xl font-black mb-12 flex items-center gap-3">
+            <div class="w-8 h-8 bg-blue-600 rounded-lg"></div> Filament <span class="text-blue-500">v3</span>
+        </div>
+        <nav class="flex-1 space-y-3" id="sidebar-nav">
+            <a href="#" onclick="loadContent('dashboard')" class="flex items-center gap-3 p-3 bg-blue-600 rounded-xl transition active:scale-95 nav-item">
+                <i class="fas fa-home w-5"></i> Dashboard
+            </a>
+            <a href="#" onclick="loadContent('users')" class="flex items-center gap-3 p-3 hover:bg-slate-800 rounded-xl transition group nav-item">
+                <i class="fas fa-users w-5 text-slate-500 group-hover:text-white"></i> User Management
+            </a>
+            <a href="#" onclick="loadContent('courses')" class="flex items-center gap-3 p-3 hover:bg-slate-800 rounded-xl transition group nav-item">
+                <i class="fas fa-book w-5 text-slate-500 group-hover:text-white"></i> Course Editor
+            </a>
+            <a href="#" onclick="loadContent('settings')" class="flex items-center gap-3 p-3 hover:bg-slate-800 rounded-xl transition group nav-item">
+                <i class="fas fa-edit w-5 text-slate-500 group-hover:text-white"></i> Blog Settings
+            </a>
+        </nav>
+        <div class="pt-10 border-t border-slate-800">
+            <a href="index.html" class="flex items-center gap-3 p-3 text-red-400 hover:bg-red-900/30 rounded-xl transition">
+                <i class="fas fa-sign-out-alt w-5"></i> Logout
+            </a>
+        </div>
+    </div>
+
+    <div class="flex-1 p-10 overflow-y-auto" id="main-content">
+        <div class="flex justify-between items-center mb-12" data-aos="fade-down">
+            <div>
+                <h1 class="text-3xl font-black">Selamat Datang, <span class="text-blue-600">Bos Bima!</span> 😎</h1>
+                <p class="text-slate-500">Pantau perkembangan bisnis pendidikan lu di sini.</p>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="text-right hidden sm:block">
+                    <div class="text-sm font-bold">Bima The Boss</div>
+                    <div class="text-xs text-slate-400">Administrator</div>
+                </div>
+                <img src="https://i.pravatar.cc/48" class="rounded-full border-4 border-white shadow-lg">
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12" id="stats-container">
+            <div class="bg-white p-8 rounded-3xl shadow-sm border-b-4 border-blue-500 hover:shadow-xl transition-all duration-300" data-aos="zoom-in">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="p-3 bg-blue-50 text-blue-600 rounded-xl"><i class="fas fa-user-graduate"></i></div>
+                    <span class="text-green-500 text-xs font-bold">+12% ↑</span>
+                </div>
+                <div class="text-slate-500 text-sm font-medium mb-1">Total Murid</div>
+                <div class="text-4xl font-black">12,450</div>
+            </div>
+            <div class="bg-white p-8 rounded-3xl shadow-sm border-b-4 border-green-500 hover:shadow-xl transition-all duration-300" data-aos="zoom-in" data-aos-delay="100">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="p-3 bg-green-50 text-green-600 rounded-xl"><i class="fas fa-wallet"></i></div>
+                    <span class="text-green-500 text-xs font-bold">+8% ↑</span>
+                </div>
+                <div class="text-slate-500 text-sm font-medium mb-1">Total Revenue</div>
+                <div class="text-4xl font-black">Rp 50jt</div>
+            </div>
+            <div class="bg-white p-8 rounded-3xl shadow-sm border-b-4 border-purple-500 hover:shadow-xl transition-all duration-300" data-aos="zoom-in" data-aos-delay="200">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="p-3 bg-purple-50 text-purple-600 rounded-xl"><i class="fas fa-layer-group"></i></div>
+                    <span class="text-slate-400 text-xs font-bold">Stable</span>
+                </div>
+                <div class="text-slate-500 text-sm font-medium mb-1">Active Courses</div>
+                <div class="text-4xl font-black">42</div>
+            </div>
+        </div>
+
+        <div class="bg-white p-8 rounded-3xl shadow-sm" data-aos="fade-up" id="details-container">
+            <h3 class="text-xl font-bold mb-6 flex items-center gap-2">
+                <i class="fas fa-bell text-blue-600"></i> Log Aktivitas Terbaru
+            </h3>
+            <div class="space-y-4">
+                <div class="flex justify-between items-center p-4 bg-slate-50 rounded-2xl hover:bg-blue-50 transition-colors group">
+                    <div class="flex items-center gap-4">
+                        <div class="w-2 h-2 bg-blue-500 rounded-full"></div>
+                        <span>User <strong class="text-blue-600">Bima</strong> baru saja maki-maki Docker</span>
+                    </div>
+                    <span class="text-xs text-slate-400 font-medium">2 menit lalu</span>
+                </div>
+                <div class="flex justify-between items-center p-4 bg-slate-50 rounded-2xl hover:bg-blue-50 transition-colors group">
+                    <div class="flex items-center gap-4">
+                        <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                        <span>Sistem berhasil install <strong class="text-green-600">artisan</strong> gaib</span>
+                    </div>
+                    <span class="text-xs text-slate-400 font-medium">10 menit lalu</span>
+                </div>
+                <div class="flex justify-between items-center p-4 bg-slate-50 rounded-2xl hover:bg-blue-50 transition-colors group">
+                    <div class="flex items-center gap-4">
+                        <div class="w-2 h-2 bg-purple-500 rounded-full"></div>
+                        <span>Pembayaran diterima dari <strong class="text-purple-600">Siswa Baru</strong></span>
+                    </div>
+                    <span class="text-xs text-slate-400 font-medium">1 jam lalu</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init();
+        function loadContent(page) {
+            const content = document.getElementById('main-content');
+            const stats = document.getElementById('stats-container');
+            const details = document.getElementById('details-container');
+            
+            // Fake Loading Effect
+            content.style.opacity = '0.5';
+            setTimeout(() => {
+                content.style.opacity = '1';
+                if(page === 'dashboard') {
+                    window.location.reload();
+                } else {
+                    stats.innerHTML = '<div class="col-span-3 text-center py-10 text-slate-400 font-bold">Memuat data ' + page + '...</div>';
+                    details.innerHTML = '<div class="text-center py-10 text-slate-400 font-bold">Halaman ' + page + ' sedang dikembangkan oleh Haruna Noa. Sabar ya Bos!</div>';
+                }
+            }, 300);
+        }
+
+        // Handle Sidebar Active State
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('bg-blue-600'));
+                this.classList.add('bg-blue-600');
+            });
+        });
+    </script>
+</body>
+</html>

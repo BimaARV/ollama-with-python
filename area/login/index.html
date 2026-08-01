@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NexLinkNet · Sign In</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+/* ============================================
+   BASE
+   ============================================ */
+:root {
+  --bg: #0a0a0f;
+  --bg-card: rgba(15, 20, 35, 0.6);
+  --text: #e5e7eb;
+  --text-mute: #9ca3af;
+  --text-dim: #6b7280;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-hover: rgba(255, 255, 255, 0.15);
+  --brand: #2cc2ff;
+  --brand-2: #8b5cf6;
+  --brand-3: #ec4899;
+  --green: #22c55e;
+  --red: #ef4444;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============================================
+   BACKGROUND LAYERS
+   ============================================ */
+.bg-mesh {
+  position: fixed; inset: 0; z-index: 0;
+  background:
+    radial-gradient(at 20% 20%, rgba(44, 194, 255, 0.18) 0px, transparent 50%),
+    radial-gradient(at 80% 30%, rgba(139, 92, 246, 0.18) 0px, transparent 50%),
+    radial-gradient(at 50% 80%, rgba(236, 72, 153, 0.15) 0px, transparent 50%);
+  filter: blur(40px);
+  animation: meshShift 12s ease-in-out infinite alternate;
+}
+@keyframes meshShift {
+  0%   { transform: scale(1) rotate(0deg); }
+  100% { transform: scale(1.15) rotate(6deg); }
+}
+.bg-grid {
+  position: fixed; inset: 0; z-index: 1;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+  background-size: 50px 50px;
+  -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+          mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+}
+.blob {
+  position: fixed; border-radius: 50%; filter: blur(80px);
+  z-index: 0; opacity: 0.5; pointer-events: none;
+}
+.blob.b1 { top: 5rem;  left: 5rem;  width: 18rem; height: 18rem; background: #00a8f4; animation: blob 18s infinite; }
+.blob.b2 { bottom: 5rem; right: 5rem; width: 24rem; height: 24rem; background: #8b5cf6; animation: blob 18s infinite 4s; }
+.blob.b3 { top: 50%; left: 50%; transform: translate(-50%, -50%); width: 18rem; height: 18rem; background: #ec4899; opacity: 0.3; animation: blob 18s infinite 8s; }
+@keyframes blob {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%      { transform: translate(40px, -60px) scale(1.15); }
+  66%      { transform: translate(-30px, 30px) scale(0.9); }
+}
+
+#particles { position: fixed; inset: 0; z-index: 2; pointer-events: none; }
+.particle {
+  position: absolute; width: 4px; height: 4px;
+  background: rgba(255,255,255,0.5); border-radius: 50%; pointer-events: none;
+  animation: floatUp linear infinite;
+}
+@keyframes floatUp {
+  from { transform: translateY(0) translateX(0); opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  to   { transform: translateY(-110vh) translateX(20px); opacity: 0; }
+}
+
+/* ============================================
+   LAYOUT
+   ============================================ */
+main {
+  position: relative; z-index: 10;
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  padding: 3rem 1rem;
+}
+.card-wrap { width: 100%; max-width: 28rem; }
+
+/* ============================================
+   GLASS CARD
+   ============================================ */
+.glass {
+  background: var(--bg-card);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+          backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow:
+    0 10px 40px -10px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+}
+
+/* ============================================
+   LOGO & HEADER
+   ============================================ */
+.logo-box {
+  display: inline-flex; align-items: center; justify-content: center;
+  margin-bottom: 1.25rem; position: relative;
+}
+.logo-blur {
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, var(--brand), var(--brand-2));
+  filter: blur(20px); opacity: 0.6;
+  border-radius: 1rem;
+}
+.logo-icon {
+  position: relative;
+  width: 4rem; height: 4rem;
+  border-radius: 1rem;
+  background: linear-gradient(135deg, #00a8f4, #8b5cf6);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 10px 30px -5px rgba(0, 168, 244, 0.5);
+  animation: pulseRing 2.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+}
+@keyframes pulseRing {
+  0%   { box-shadow: 0 0 0 0 rgba(44, 194, 255, 0.5); }
+  70%  { box-shadow: 0 0 0 12px rgba(44, 194, 255, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(44, 194, 255, 0); }
+}
+.title {
+  font-size: 1.875rem; font-weight: 700; letter-spacing: -0.025em;
+  text-align: center;
+}
+.text-gradient {
+  background: linear-gradient(135deg, #2cc2ff 0%, #8b5cf6 50%, #ec4899 100%);
+  background-size: 200% 200%;
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent;
+  animation: shimmer 6s ease-in-out infinite;
+}
+@keyframes shimmer {
+  0%, 100% { background-position: 0% 50%; }
+  50%      { background-position: 100% 50%; }
+}
+.subtitle {
+  text-align: center; margin-top: 0.5rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.875rem;
+  color: var(--text-mute);
+}
+.heading { font-size: 1.25rem; font-weight: 600; color: white; }
+.intro { font-size: 0.875rem; color: var(--text-mute); margin-top: 0.25rem; }
+
+/* ============================================
+   FORM ELEMENTS
+   ============================================ */
+.form { margin-top: 1.5rem; }
+.field { margin-bottom: 1.25rem; }
+.label {
+  display: block;
+  font-size: 0.75rem; font-weight: 500;
+  color: #d1d5db;
+  text-transform: uppercase; letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+.label-row {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+.label-row .label { margin: 0; }
+
+.input-wrap { position: relative; }
+.input-icon {
+  position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%);
+  color: #6b7280; pointer-events: none;
+  transition: color 0.2s ease;
+}
+.input {
+  width: 100%;
+  padding: 0.75rem 0.75rem 0.75rem 2.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  color: white;
+  font-size: 0.875rem;
+  font-family: inherit;
+  transition: all 0.25s ease;
+}
+.input.with-suffix { padding-right: 2.75rem; }
+.input::placeholder { color: #6b7280; }
+.input:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(44, 194, 255, 0.5);
+  box-shadow: 0 0 0 4px rgba(44, 194, 255, 0.12);
+}
+.input:focus ~ .input-icon,
+.input:focus + .input-icon { color: var(--brand); }
+.input-wrap:focus-within .input-icon { color: var(--brand); }
+
+.suffix-btn {
+  position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%);
+  background: none; border: 0; cursor: pointer;
+  color: #6b7280; padding: 0.25rem;
+  display: flex; align-items: center; justify-content: center;
+  transition: color 0.2s ease;
+}
+.suffix-btn:hover { color: #d1d5db; }
+
+/* ============================================
+   CHECKBOX
+   ============================================ */
+.check-row { display: flex; align-items: center; }
+.check {
+  appearance: none;
+  width: 16px; height: 16px;
+  border: 1.5px solid rgba(255,255,255,0.2);
+  border-radius: 4px;
+  background: rgba(255,255,255,0.03);
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+.check:checked {
+  background: linear-gradient(135deg, #00a8f4, #8b5cf6);
+  border-color: transparent;
+}
+.check:checked::after {
+  content: '';
+  position: absolute;
+  left: 4px; top: 1px;
+  width: 5px; height: 9px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+.check-label {
+  margin-left: 0.5rem; font-size: 0.875rem;
+  color: #d1d5db; cursor: pointer; user-select: none;
+}
+
+/* ============================================
+   BUTTON
+   ============================================ */
+.btn {
+  width: 100%; padding: 0.75rem 1rem;
+  border: 0; border-radius: 0.5rem;
+  font-weight: 600; font-size: 0.875rem;
+  color: white; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+  background: linear-gradient(135deg, #00a8f4 0%, #8b5cf6 100%);
+  background-size: 200% 200%;
+  background-position: 0% 0%;
+  position: relative;
+  transition: background-position 0.4s ease, transform 0.15s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 15px -3px rgba(0, 168, 244, 0.4);
+}
+.btn:hover {
+  background-position: 100% 100%;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 25px -5px rgba(139, 92, 246, 0.6);
+}
+.btn:active { transform: translateY(0); }
+.btn:disabled { opacity: 0.75; cursor: wait; }
+.spinner {
+  width: 18px; height: 18px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ============================================
+   DIVIDER + SOCIAL
+   ============================================ */
+.divider {
+  display: flex; align-items: center; margin: 1.5rem 0;
+}
+.divider-line {
+  flex: 1; height: 1px;
+  background: linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent);
+}
+.divider-label {
+  padding: 0 0.75rem;
+  font-size: 0.75rem;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.social-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;
+}
+.social {
+  display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+  padding: 0.625rem 1rem;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  color: #e5e7eb;
+  font-size: 0.875rem; font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.social:hover {
+  background: rgba(255,255,255,0.1);
+  border-color: var(--border-hover);
+  transform: translateY(-1px);
+}
+
+.signup {
+  text-align: center; margin-top: 1.5rem;
+  font-size: 0.875rem; color: var(--text-mute);
+}
+.signup a {
+  color: var(--brand); text-decoration: none; font-weight: 500;
+  transition: color 0.2s ease;
+}
+.signup a:hover { color: #75d5ff; }
+
+.link {
+  color: var(--brand); text-decoration: none; font-size: 0.75rem;
+  transition: color 0.2s ease;
+}
+.link:hover { color: #75d5ff; }
+
+/* ============================================
+   STATUS BAR
+   ============================================ */
+.status {
+  margin-top: 1.5rem;
+  display: flex; align-items: center; justify-content: center; gap: 0.75rem;
+  font-size: 0.75rem; color: #6b7280;
+  font-family: 'JetBrains Mono', monospace;
+}
+.status-dot {
+  width: 0.5rem; height: 0.5rem;
+  background: var(--green); border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.5; }
+}
+
+/* ============================================
+   TOAST
+   ============================================ */
+#toastContainer {
+  position: fixed; top: 1.25rem; right: 1.25rem;
+  z-index: 100; display: flex; flex-direction: column; gap: 0.5rem;
+}
+.toast {
+  background: var(--bg-card);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+          backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid var(--border);
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  display: flex; align-items: center; gap: 0.75rem;
+  min-width: 280px; max-width: 360px;
+  font-size: 0.875rem; font-weight: 500;
+  animation: toastIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+.toast.success { color: #86efac; border-color: rgba(34, 197, 94, 0.3); background: rgba(34, 197, 94, 0.08); }
+.toast.error   { color: #fca5a5; border-color: rgba(239, 68, 68, 0.3); background: rgba(239, 68, 68, 0.08); }
+.toast-exit { animation: toastOut 0.3s ease forwards !important; }
+@keyframes toastIn  { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+@keyframes toastOut { to   { transform: translateX(120%); opacity: 0; } }
+
+/* ============================================
+   REVEAL ANIMATION (tambah class via JS)
+   ============================================ */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: reveal 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+@keyframes reveal {
+  to { opacity: 1; transform: translateY(0); }
+}
+.reveal-1 { animation-delay: 0.05s; }
+.reveal-2 { animation-delay: 0.15s; }
+.reveal-3 { animation-delay: 0.25s; }
+.reveal-4 { animation-delay: 0.35s; }
+.reveal-5 { animation-delay: 0.45s; }
+.reveal-6 { animation-delay: 0.55s; }
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 480px) {
+  main { padding: 1.5rem 1rem; }
+  .glass { padding: 1.5rem; }
+  .title { font-size: 1.5rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- Background layers -->
+<div class="bg-mesh"></div>
+<div class="bg-grid"></div>
+<div class="blob b1"></div>
+<div class="blob b2"></div>
+<div class="blob b3"></div>
+<div id="particles"></div>
+
+<!-- Main content -->
+<main>
+  <div class="card-wrap">
+
+    <!-- Logo & Header -->
+    <div style="text-align: center; margin-bottom: 1.75rem;">
+      <div class="logo-box">
+        <div class="logo-blur"></div>
+        <div class="logo-icon">
+          <svg width="32" height="32" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+          </svg>
+        </div>
+      </div>
+      <h1 class="title"><span class="text-gradient">NexLinkNet</span></h1>
+      <p class="subtitle">~/network.ops · access.portal</p>
+    </div>
+
+    <!-- Card -->
+    <div class="glass">
+      <div>
+        <h2 class="heading">Selamat datang kembali</h2>
+        <p class="intro">Masuk untuk mengelola jaringan lo, Bos.</p>
+      </div>
+
+      <form class="form" id="loginForm" novalidate>
+
+        <!-- Email Field -->
+        <div class="field">
+          <label class="label" for="email">Email</label>
+          <div class="input-wrap">
+            <svg class="input-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+            </svg>
+            <input type="email" id="email" class="input" required placeholder="admin@nexlinknet.id" autocomplete="email" />
+          </div>
+        </div>
+
+        <!-- Password Field -->
+        <div class="field">
+          <div class="label-row">
+            <label class="label" for="password">Password</label>
+            <a href="#" class="link">Lupa password?</a>
+          </div>
+          <div class="input-wrap">
+            <svg class="input-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+            </svg>
+            <input type="password" id="password" class="input with-suffix" required placeholder="••••••••••" autocomplete="current-password" />
+            <button type="button" id="togglePass" class="suffix-btn" aria-label="Toggle password">
+              <svg id="eyeIcon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Remember + Forgot -->
+        <div class="field" style="margin-top: 1rem;">
+          <div class="check-row">
+            <input type="checkbox" id="remember" class="check" />
+            <label for="remember" class="check-label">Ingat saya di device ini</label>
+          </div>
+        </div>
+
+        <!-- Submit -->
+        <div class="field" style="margin-top: 1.5rem; margin-bottom: 0;">
+          <button type="submit" id="submitBtn" class="btn">
+            <span id="btnText">Sign In</span>
+            <div id="btnSpinner" class="spinner" style="display: none;"></div>
+          </button>
+        </div>
+      </form>
+
+      <!-- Divider -->
+      <div class="divider">
+        <div class="divider-line"></div>
+        <span class="divider-label">atau</span>
+        <div class="divider-line"></div>
+      </div>
+
+      <!-- Social -->
+      <div class="social-grid">
+        <button type="button" class="social">
+          <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#fff" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#fff" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#fff" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#fff" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          Google
+        </button>
+        <button type="button" class="social">
+          <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.685-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          GitHub
+        </button>
+      </div>
+
+      <!-- Signup -->
+      <p class="signup">
+        Belum punya akun?
+        <a href="#">Daftar sekarang</a>
+      </p>
+    </div>
+
+    <!-- Status -->
+    <div class="status">
+      <span class="status-dot"></span>
+      <span>System Online</span>
+      <span>·</span>
+      <span>v1.0.0</span>
+      <span>·</span>
+      <span>2026</span>
+    </div>
+  </div>
+</main>
+
+<!-- Toast container -->
+<div id="toastContainer"></div>
+
+<script>
+/* ============================================
+   PARTICLES
+   ============================================ */
+(function makeParticles() {
+  const c = document.getElementById('particles');
+  for (let i = 0; i < 28; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.bottom = '-10px';
+    p.style.animationDuration = (8 + Math.random() * 10) + 's';
+    p.style.animationDelay = Math.random() * 8 + 's';
+    p.style.opacity = 0.3 + Math.random() * 0.5;
+    p.style.transform = 'scale(' + (0.5 + Math.random() * 1.2) + ')';
+    c.appendChild(p);
+  }
+})();
+
+/* ============================================
+   REVEAL ANIMATIONS
+   Apply .reveal + .reveal-N classes via JS,
+   so initial state is visible if JS fails.
+   ============================================ */
+(function revealOnLoad() {
+  const targets = [
+    document.querySelector('.glass'),
+    document.querySelector('.status'),
+    ...document.querySelectorAll('.glass > *'),
+  ].filter(Boolean);
+  targets.forEach((el, i) => {
+    el.classList.add('reveal', 'reveal-' + Math.min(i + 1, 6));
+  });
+})();
+
+/* ============================================
+   TOGGLE PASSWORD
+   ============================================ */
+const eyeOpenPath = '<path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>';
+const eyeOffPath  = '<path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>';
+
+document.getElementById('togglePass').addEventListener('click', () => {
+  const pass = document.getElementById('password');
+  const eye  = document.getElementById('eyeIcon');
+  const show = pass.type === 'password';
+  pass.type = show ? 'text' : 'password';
+  eye.innerHTML = show ? eyeOffPath : eyeOpenPath;
+});
+
+/* ============================================
+   TOAST
+   ============================================ */
+function showToast(message, type) {
+  type = type || 'success';
+  const container = document.getElementById('toastContainer');
+  const t = document.createElement('div');
+  t.className = 'toast ' + type;
+  const icons = {
+    success: '<path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>',
+    error:   '<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>',
+  };
+  t.innerHTML =
+    '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">' + (icons[type] || icons.info || '') + '</svg>' +
+    '<span>' + message + '</span>';
+  container.appendChild(t);
+  setTimeout(() => {
+    t.classList.add('toast-exit');
+    setTimeout(() => t.remove(), 300);
+  }, 3500);
+}
+
+/* ============================================
+   SUBMIT
+   ============================================ */
+const form     = document.getElementById('loginForm');
+const btn      = document.getElementById('submitBtn');
+const btnText  = document.getElementById('btnText');
+const spinner  = document.getElementById('btnSpinner');
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email    = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+
+  btn.disabled = true;
+  btnText.textContent = 'Authenticating...';
+  spinner.style.display = 'block';
+
+  await new Promise(r => setTimeout(r, 1800));
+
+  if (!email || !email.includes('@') || password.length < 4) {
+    showToast('Cek lagi email & password lo, Bos.', 'error');
+  } else {
+    showToast('Login berhasil! Welcome back, ' + email.split('@')[0] + '.', 'success');
+  }
+
+  btn.disabled = false;
+  btnText.textContent = 'Sign In';
+  spinner.style.display = 'none';
+});
+
+/* ============================================
+   SUBTLE MOUSE PARALLAX ON BLOBS
+   ============================================ */
+document.addEventListener('mousemove', (e) => {
+  const x = (e.clientX / window.innerWidth  - 0.5) * 20;
+  const y = (e.clientY / window.innerHeight - 0.5) * 20;
+  const b1 = document.querySelector('.blob.b1');
+  const b2 = document.querySelector('.blob.b2');
+  const b3 = document.querySelector('.blob.b3');
+  if (b1) b1.style.transform = 'translate(' + (x * 0.4) + 'px,' + (y * 0.4) + 'px)';
+  if (b2) b2.style.transform = 'translate(' + (x * -0.3) + 'px,' + (y * -0.3) + 'px)';
+  if (b3) b3.style.transform = 'translate(calc(-50% + ' + (x * 0.2) + 'px), calc(-50% + ' + (y * 0.2) + 'px))';
+});
+</script>
+</body>
+</html>

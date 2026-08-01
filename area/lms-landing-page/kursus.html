@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Katalog Kursus - LMS Blog</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); }
+        .filter-btn { transition: all 0.2s; }
+        .filter-btn.active { background: #2563eb; color: white; border-color: #2563eb; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900">
+    <div class="fixed top-0 w-full z-50 glass border-b border-slate-200">
+        <nav class="flex items-center justify-between px-8 py-4 max-w-7xl mx-auto" id="main-nav">
+            <div class="text-2xl font-extrabold text-blue-600 flex items-center gap-2 cursor-pointer" onclick="window.location.href='index.html'">
+                <i class="fas fa-graduation-cap"></i> <span>LMS Blog</span>
+            </div>
+            <div class="hidden md:flex gap-8 font-semibold text-slate-600" id="nav-links">
+                <a href="index.html" class="hover:text-blue-600 transition-all">Home</a>
+                <a href="kursus.html" class="text-blue-600 font-bold">Kursus</a>
+                <a href="blog.html" class="hover:text-blue-600 transition-all">Blog</a>
+                <a href="admin.html" class="hover:text-blue-600 transition-all hidden" id="admin-nav-link">Admin Panel</a>
+            </div>
+            <div class="flex gap-4 items-center" id="auth-buttons">
+                <a href="login.html" class="hidden sm:block px-5 py-2 text-slate-600 font-bold hover:text-blue-600 transition">Login</a>
+                <a href="register.html" class="px-6 py-2 bg-blue-600 text-white rounded-full font-bold hover:bg-blue-700 transition-all shadow-lg">Daftar</a>
+            </div>
+            <div class="hidden" id="user-menu">
+                <div class="relative">
+                    <button id="user-menu-btn" class="flex items-center gap-2 px-4 py-2 bg-white rounded-full border border-slate-200 hover:bg-slate-50 transition">
+                        <img id="user-avatar" src="" class="w-8 h-8 rounded-full" alt="Avatar">
+                        <span id="user-name" class="font-semibold text-slate-700"></span>
+                        <i class="fas fa-chevron-down text-xs text-slate-500"></i>
+                    </button>
+                    <div id="user-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-2xl shadow-xl border border-slate-100 py-2 z-50">
+                        <a href="kursus.html?my=courses" class="block px-4 py-2 text-slate-700 hover:bg-slate-50 flex items-center gap-2"><i class="fas fa-book w-5"></i> Kursus Saya</a>
+                        <a href="admin.html" class="block px-4 py-2 text-slate-700 hover:bg-slate-50 flex items-center gap-2 hidden" id="admin-dropdown-link"><i class="fas fa-cog w-5"></i> Admin Panel</a>
+                        <hr class="my-2 border-slate-100">
+                        <button onclick="LMS.logout(); window.location.reload()" class="block w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 flex items-center gap-2"><i class="fas fa-sign-out-alt w-5"></i> Logout</button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-8 py-24">
+        <!-- Header -->
+        <div class="text-center mb-12" data-aos="fade-down">
+            <h1 class="text-5xl font-black mb-4">Pilih <span class="text-blue-600">Senjata</span> Lu! 🚀</h1>
+            <p class="text-slate-500 text-lg">Katalog kursus terbaik untuk transformasi karier lu.</p>
+        </div>
+
+        <!-- Search & Filters -->
+        <div class="bg-white rounded-3xl shadow-sm border border-slate-100 p-6 mb-10" data-aos="fade-up">
+            <div class="flex flex-col md:flex-row gap-6">
+                <div class="flex-1 relative">
+                    <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                    <input type="text" id="search-input" placeholder="Cari kursus... (judul, kategori, instructor)" class="w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
+                </div>
+                <div class="flex flex-wrap gap-3" id="category-filters">
+                    <button class="filter-btn active px-5 py-2 bg-blue-600 text-white rounded-full font-bold text-sm" data-category="all">Semua</button>
+                </div>
+                <select id="sort-select" class="px-5 py-2 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:outline-none transition bg-white">
+                    <option value="newest">Terbaru</option>
+                    <option value="popular">Paling Populer</option>
+                    <option value="price-low">Harga Termurah</option>
+                    <option value="price-high">Harga Termahal</option>
+                    <option value="rating">Rating Tertinggi</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Courses Grid -->
+        <div class="grid md:grid-cols-3 gap-8" id="courses-grid">
+            <!-- Rendered by JS -->
+        </div>
+
+        <!-- Pagination -->
+        <div class="flex justify-center gap-2 mt-12" id="pagination">
+            <!-- Rendered by JS -->
+        </div>
+
+        <!-- Empty State -->
+        <div id="empty-state" class="hidden text-center py-20">
+            <i class="fas fa-search text-6xl text-slate-300 mb-4"></i>
+            <h3 class="text-2xl font-bold text-slate-600 mb-2">Kursus nggak ketemu</h3>
+            <p class="text-slate-500">Coba ubah filter atau kata kunci pencarian</p>
+        </div>
+    </div>
+
+    <!-- Course Detail Modal -->
+    <div id="course-modal" class="hidden fixed inset-0 z-[9999] flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="closeCourseModal()"></div>
+        <div class="relative bg-white rounded-3xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto animate-scale-in">
+            <div id="course-modal-content"></div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="shared.js"></script>
+    <script>
+        AOS.init();
+
+        // State
+        let allCourses = [];
+        let filteredCourses = [];
+        let currentPage = 1;
+        const perPage = 9;
+        let activeCategory = 'all';
+        let searchQuery = '';
+        let sortBy = 'newest';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateAuthUI();
+            loadCourses();
+            setupFilters();
+            setupSearch();
+            setupSort();
+            setupUserMenu();
+            checkUrlParams();
+        });
+
+        function updateAuthUI() {
+            const user = LMS.getCurrentUser();
+            const authButtons = document.getElementById('auth-buttons');
+            const userMenu = document.getElementById('user-menu');
+            const adminNavLink = document.getElementById('admin-nav-link');
+            const adminDropdownLink = document.getElementById('admin-dropdown-link');
+
+            if (user) {
+                authButtons.classList.add('hidden');
+                userMenu.classList.remove('hidden');
+                document.getElementById('user-name').textContent = user.firstName;
+                document.getElementById('user-avatar').src = user.avatar;
+                if (user.role === 'admin') {
+                    adminNavLink.classList.remove('hidden');
+                    adminDropdownLink.classList.remove('hidden');
+                }
+            } else {
+                authButtons.classList.remove('hidden');
+                userMenu.classList.add('hidden');
+                adminNavLink.classList.add('hidden');
+                adminDropdownLink.classList.add('hidden');
+            }
+        }
+
+        function setupUserMenu() {
+            const btn = document.getElementById('user-menu-btn');
+            const dropdown = document.getElementById('user-dropdown');
+            btn?.addEventListener('click', (e) => { e.stopPropagation(); dropdown.classList.toggle('hidden'); });
+            document.addEventListener('click', () => dropdown?.classList.add('hidden'));
+        }
+
+        function loadCourses() {
+            allCourses = LMS.getCourses({ published: true });
+            buildCategoryFilters();
+            applyFilters();
+        }
+
+        function buildCategoryFilters() {
+            const categories = [...new Set(allCourses.map(c => c.category))].sort();
+            const container = document.getElementById('category-filters');
+            const allBtn = container.querySelector('[data-category="all"]');
+            container.innerHTML = '';
+            container.appendChild(allBtn);
+            
+            categories.forEach(cat => {
+                const btn = document.createElement('button');
+                btn.className = 'filter-btn px-5 py-2 border border-slate-200 text-slate-600 rounded-full font-bold text-sm hover:bg-slate-50 hover:border-blue-300 transition';
+                btn.dataset.category = cat.toLowerCase().replace(/\s+/g, '-');
+                btn.textContent = cat;
+                btn.addEventListener('click', () => setCategory(btn.dataset.category));
+                container.appendChild(btn);
+            });
+        }
+
+        function setupFilters() {
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', () => setCategory(btn.dataset.category));
+            });
+        }
+
+        function setupSearch() {
+            const input = document.getElementById('search-input');
+            let debounceTimer;
+            input.addEventListener('input', (e) => {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => {
+                    searchQuery = e.target.value.toLowerCase();
+                    currentPage = 1;
+                    applyFilters();
+                }, 300);
+            });
+        }
+
+        function setupSort() {
+            document.getElementById('sort-select').addEventListener('change', (e) => {
+                sortBy = e.target.value;
+                applyFilters();
+            });
+        }
+
+        function setCategory(category) {
+            activeCategory = category;
+            currentPage = 1;
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.category === category);
+                if (btn.classList.contains('active')) {
+                    btn.classList.remove('border-slate-200', 'text-slate-600', 'hover:bg-slate-50');
+                    btn.classList.add('bg-blue-600', 'text-white', 'border-blue-600');
+                } else {
+                    btn.classList.remove('bg-blue-600', 'text-white', 'border-blue-600');
+                    btn.classList.add('border-slate-200', 'text-slate-600');
+                }
+            });
+            applyFilters();
+        }
+
+        function applyFilters() {
+            filteredCourses = allCourses.filter(course => {
+                const matchesCategory = activeCategory === 'all' || course.category.toLowerCase().replace(/\s+/g, '-') === activeCategory;
+                const matchesSearch = !searchQuery || 
+                    course.title.toLowerCase().includes(searchQuery) ||
+                    course.shortDesc.toLowerCase().includes(searchQuery) ||
+                    course.category.toLowerCase().includes(searchQuery) ||
+                    course.instructor.name.toLowerCase().includes(searchQuery) ||
+                    course.tags.some(t => t.toLowerCase().includes(searchQuery));
+                return matchesCategory && matchesSearch;
+            });
+
+            // Sort
+            switch (sortBy) {
+                case 'popular': filteredCourses.sort((a, b) => b.totalStudents - a.totalStudents); break;
+                case 'price-low': filteredCourses.sort((a, b) => a.price - b.price); break;
+                case 'price-high': filteredCourses.sort((a, b) => b.price - a.price); break;
+                case 'rating': filteredCourses.sort((a, b) => b.rating - a.rating); break;
+                default: filteredCourses.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            }
+
+            renderCourses();
+            renderPagination();
+        }
+
+        function renderCourses() {
+            const container = document.getElementById('courses-grid');
+            const emptyState = document.getElementById('empty-state');
+            const start = (currentPage - 1) * perPage;
+            const pageCourses = filteredCourses.slice(start, start + perPage);
+
+            if (pageCourses.length === 0) {
+                container.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            container.innerHTML = pageCourses.map((course, i) => `
+                <article class="group bg-white rounded-3xl overflow-hidden shadow-lg border border-slate-100 hover:border-blue-500 transition-all duration-500 hover:-translate-y-4" data-aos="fade-up" data-aos-delay="${(i % 6) * 100}" style="animation-delay: ${(i % 6) * 100}ms">
+                    <div class="relative overflow-hidden">
+                        <img src="${course.thumbnail}" class="w-full h-56 object-cover bg-blue-100 p-6 group-hover:scale-110 transition-transform duration-500" alt="${course.title}">
+                        <div class="absolute top-4 right-4 bg-blue-600 text-white px-3 py-1 rounded-full text-xs font-bold">${course.level}</div>
+                        <div class="absolute bottom-4 left-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-medium text-slate-700">${course.category}</div>
+                        ${LMS.isLoggedIn() && LMS.isEnrolled(LMS.getCurrentUser().id, course.id) ? `
+                            <div class="absolute top-4 left-4 bg-green-600 text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
+                                <i class="fas fa-check"></i> Terdaftar
+                            </div>
+                        ` : ''}
+                    </div>
+                    <div class="p-8">
+                        <div class="flex items-center gap-2 mb-3">
+                            <img src="${course.instructor.avatar}" class="w-6 h-6 rounded-full" alt="${course.instructor.name}">
+                            <span class="text-sm text-slate-600">${course.instructor.name}</span>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-3 group-hover:text-blue-600 transition-colors cursor-pointer" onclick="openCourseModal(${course.id})">${course.title}</h3>
+                        <p class="text-slate-600 mb-6 leading-relaxed line-clamp-2">${course.shortDesc}</p>
+                        
+                        <div class="flex items-center gap-4 mb-6 text-sm text-slate-500">
+                            <span class="flex items-center gap-1"><i class="fas fa-star text-yellow-500"></i> ${course.rating} (${course.totalReviews})</span>
+                            <span class="flex items-center gap-1"><i class="fas fa-users"></i> ${course.totalStudents.toLocaleString('id-ID')}</span>
+                            <span class="flex items-center gap-1"><i class="fas fa-clock"></i> ${course.duration}</span>
+                        </div>
+
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="text-2xl font-black text-slate-800">${LMS.formatCurrency(course.price)}</span>
+                                ${course.originalPrice > course.price ? `<span class="text-slate-400 line-through text-lg ml-2">${LMS.formatCurrency(course.originalPrice)}</span>` : ''}
+                            </div>
+                            <button onclick="handleCourseAction(${course.id})" class="px-6 py-2 ${LMS.isLoggedIn() && LMS.isEnrolled(LMS.getCurrentUser().id, course.id) ? 'bg-green-600 hover:bg-green-700' : 'bg-blue-600 hover:bg-blue-700'} text-white rounded-xl font-bold transition active:scale-95">
+                                ${LMS.isLoggedIn() && LMS.isEnrolled(LMS.getCurrentUser().id, course.id) ? 'Lanjutkan Belajar' : 'Ambil Kursus'}
+                            </button>
+                        </div>
+                    </div>
+                </article>
+            `).join('');
+        }
+
+        function renderPagination() {
+            const container = document.getElementById('pagination');
+            const totalPages = Math.ceil(filteredCourses.length / perPage);
+            
+            if (totalPages <= 1) {
+                container.innerHTML = '';
+                return;
+            }
+
+            let html = '';
+            // Prev
+            html += `<button onclick="changePage(${currentPage - 1})" class="px-4 py-2 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''}" ${currentPage === 1 ? 'disabled' : ''}><i class="fas fa-chevron-left"></i></button>`;
+            
+            // Page numbers
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
+                    html += `<button onclick="changePage(${i})" class="w-10 h-10 rounded-xl font-bold transition ${i === currentPage ? 'bg-blue-600 text-white' : 'border border-slate-200 text-slate-600 hover:bg-slate-50'}">${i}</button>`;
+                } else if (i === currentPage - 2 || i === currentPage + 2) {
+                    html += `<span class="w-10 h-10 flex items-center justify-center text-slate-400">...</span>`;
+                }
+            }
+            
+            // Next
+            html += `<button onclick="changePage(${currentPage + 1})" class="px-4 py-2 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''}" ${currentPage === totalPages ? 'disabled' : ''}><i class="fas fa-chevron-right"></i></button>`;
+            
+            container.innerHTML = html;
+        }
+
+        function changePage(page) {
+            const totalPages = Math.ceil(filteredCourses.length / perPage);
+            if (page < 1 || page > totalPages) return;
+            currentPage = page;
+            renderCourses();
+            renderPagination();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function handleCourseAction(courseId) {
+            if (!LMS.isLoggedIn()) {
+                LMS.showToast('Silakan login dulu untuk mengakses kursus', 'warning');
+                setTimeout(() => window.location.href = 'login.html', 1500);
+                return;
+            }
+            
+            const course = LMS.getCourseById(courseId);
+            const user = LMS.getCurrentUser();
+            
+            if (LMS.isEnrolled(user.id, courseId)) {
+                LMS.showToast('Lu sudah terdaftar! Redirect ke player...', 'info');
+                // window.location.href = `course-player.html?id=${courseId}`;
+            } else {
+                const result = LMS.enrollUser(user.id, courseId);
+                if (result.success) {
+                    LMS.showToast(`Berhasil daftar ke "${course.title}"!`, 'success');
+                    applyFilters(); // Re-render to show "Lanjutkan Belajar"
+                } else {
+                    LMS.showToast(result.message, 'error');
+                }
+            }
+        }
+
+        function openCourseModal(courseId) {
+            const course = LMS.getCourseById(courseId);
+            if (!course) return;
+            
+            const user = LMS.getCurrentUser();
+            const isEnrolled = user && LMS.isEnrolled(user.id, courseId);
+            
+            document.getElementById('course-modal-content').innerHTML = `
+                <div class="relative">
+                    <img src="${course.thumbnail}" class="w-full h-64 object-cover rounded-t-3xl" alt="${course.title}">
+                    <button onclick="closeCourseModal()" class="absolute top-4 right-4 w-10 h-10 bg-white/90 backdrop-blur rounded-full flex items-center justify-center hover:bg-slate-100 transition shadow-lg">
+                        <i class="fas fa-times text-slate-600"></i>
+                    </button>
+                    <div class="absolute bottom-4 left-4 right-4 flex flex-wrap gap-2">
+                        <span class="bg-blue-600 text-white px-3 py-1 rounded-full text-xs font-bold">${course.level}</span>
+                        <span class="bg-white/90 backdrop-blur text-slate-700 px-3 py-1 rounded-full text-xs font-medium">${course.category}</span>
+                        ${course.tags.slice(0, 3).map(t => `<span class="bg-white/90 backdrop-blur text-slate-600 px-3 py-1 rounded-full text-xs">${t}</span>`).join('')}
+                    </div>
+                </div>
+                <div class="p-8">
+                    <div class="flex items-center gap-4 mb-6">
+                        <img src="${course.instructor.avatar}" class="w-12 h-12 rounded-full" alt="${course.instructor.name}">
+                        <div>
+                            <h4 class="font-bold text-slate-700">${course.instructor.name}</h4>
+                            <p class="text-sm text-slate-500">${course.lessons} Pelajaran • ${course.duration}</p>
+                        </div>
+                    </div>
+                    
+                    <h2 class="text-3xl font-extrabold mb-4">${course.title}</h2>
+                    <p class="text-slate-600 leading-relaxed mb-6">${course.longDesc}</p>
+                    
+                    <div class="grid grid-cols-3 gap-4 mb-8 p-4 bg-slate-50 rounded-2xl">
+                        <div class="text-center">
+                            <div class="text-2xl font-black text-blue-600">${course.rating}</div>
+                            <div class="text-sm text-slate-500">Rating</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-black text-green-600">${course.totalStudents.toLocaleString('id-ID')}</div>
+                            <div class="text-sm text-slate-500">Murid</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-black text-purple-600">${course.lessons}</div>
+                            <div class="text-sm text-slate-500">Pelajaran</div>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-4">
+                        <button onclick="handleCourseAction(${course.id}); closeCourseModal()" class="flex-1 py-4 ${isEnrolled ? 'bg-green-600 hover:bg-green-700' : 'bg-blue-600 hover:bg-blue-700'} text-white rounded-xl font-bold text-lg transition active:scale-95">
+                            ${isEnrolled ? '<i class="fas fa-play mr-2"></i>Lanjutkan Belajar' : '<i class="fas fa-shopping-cart mr-2"></i>Ambil Kursus'}
+                        </button>
+                        <button onclick="closeCourseModal()" class="px-8 py-4 border border-slate-200 text-slate-700 rounded-xl font-bold hover:bg-slate-50 transition">Tutup</button>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('course-modal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeCourseModal() {
+            document.getElementById('course-modal').classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+
+        function checkUrlParams() {
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('my') === 'courses') {
+                if (!LMS.isLoggedIn()) {
+                    LMS.showToast('Silakan login untuk melihat kursus Anda', 'warning');
+                    setTimeout(() => window.location.href = 'login.html', 1500);
+                } else {
+                    showMyCourses();
+                }
+            }
+        }
+
+        function showMyCourses() {
+            const user = LMS.getCurrentUser();
+            const enrollments = LMS.getEnrollments(user.id);
+            const myCourses = enrollments.map(e => LMS.getCourseById(e.courseId)).filter(Boolean);
+            
+            activeCategory = 'my-courses';
+            filteredCourses = myCourses;
+            currentPage = 1;
+            renderCourses();
+            renderPagination();
+            
+            // Update filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active', 'bg-blue-600', 'text-white', 'border-blue-600'));
+            // Add "Kursus Saya" filter dynamically if not exists
+        }
+    </script>
+</body>
+</html>
