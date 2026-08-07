@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-vibe_agent.py — Asisten pribadi berbasis Ollama Cloud (Gemma)
+vibe_agent.py — Asisten pribadi berbasis Ollama Cloud (Minimax-M3)
 yang bisa buat & hapus folder lewat obrolan biasa (tool calling / function calling).
 
 CARA PAKAI:
@@ -30,7 +30,7 @@ KONFIGURASI VIA .env:
   Buat file .env di folder yang sama (lihat .env.example), isinya:
     OLLAMA_API_KEY=xxxxxxxx     # API key Ollama Cloud kamu (kalau perlu)
     OLLAMA_HOST=https://ollama.com   # opsional, default lokal http://localhost:11434
-    VIBE_MODEL=gemma4:cloud
+    VIBE_MODEL=minimax-m3:cloud
     VIBE_BASE_DIR=/path/ke/project/kamu       # tempat buat_folder/hapus_folder/dst beroperasi
     VIBE_SKILL_DIR=/path/ke/folder/skill      # tempat cari_skill/baca_referensi_skill nyari
 """
@@ -59,7 +59,7 @@ except ImportError:
 
 # ── Konfigurasi (diambil dari .env / environment variable) ─────────────────
 
-MODEL = os.environ.get("VIBE_MODEL", "gemma4:cloud")  # sesuaikan nama model cloud kamu
+MODEL = os.environ.get("VIBE_MODEL", "minimax-m3:cloud")  # sesuaikan nama model cloud kamu
 BASE_DIR = Path(os.environ.get("VIBE_BASE_DIR", os.getcwd())).resolve()
 
 # SKILL_DIR: tempat khusus buat cari/baca SKILL.md & paket .skill.
